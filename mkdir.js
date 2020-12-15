@@ -11,6 +11,9 @@ var makeDirectory = function(dir) {
 	})
 }
 
+makeDirectory('images')
+makeDirectory('exports')
+
 Max.addHandler("mkdir", (msg) => {
 	makeDirectory( msg )
 }) 
