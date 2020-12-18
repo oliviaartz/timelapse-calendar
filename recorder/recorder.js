@@ -5,7 +5,7 @@ const NodeWebcam = require( "node-webcam" ),
 				width: 640,
 				height: 360,
 				quality: 100,
-				output: "png" // [jpeg, png] support varies
+				output: "png"
 		 	}
 
 var makeDirectory = function(dir) {
@@ -24,12 +24,12 @@ var capturePhoto = function() {
 			day = String(now.getDate()).padStart(2, 0),
 			year = now.getFullYear(),
 			dateStr = `${month}-${day}-${year}`,
-			path = `images/${dateStr}/`,
+			path = `../images/${dateStr}/`,
 			hours = now.getHours(),
 			minutes = now.getMinutes(),
 			seconds = now.getSeconds(),
 			frameNum = parseInt( ((((hours*60)+minutes)*60)+seconds) / 6, 10 ) + 1,
-			filename = `${dateStr}-${frameNum}`
+			filename = `${dateStr}-${frameNum}.png`
 
 	makeDirectory(path)
 	NodeWebcam.capture( path + filename, opts, function( err, data ) {
