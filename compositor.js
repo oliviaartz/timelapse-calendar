@@ -8,6 +8,7 @@ var camHeight = 360
 var calWidth = 3840
 var calHeight = 2160
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+var frameNum = 0
 
 var showTime = function (t) {
 	var framesFound = []
@@ -18,25 +19,37 @@ var showTime = function (t) {
 			framesFound.push(possibleImage)
 		}
 	}
-	drawTime(t)	
+	frameNum = t
 	outlet(0, 'clear')
+	drawText()
 	drawFrames(framesFound)
 	outlet(0, 'bang')
 }
 
-var drawTime = function(time) {
+var drawText = function(time) {
 	var d = new Date()
 	var month = monthNames[d.getMonth()]
 	
 	// jit.lcd method below
-	// outlet(0, 'moveto', 40, 120)
-	// outlet(0, 'font', 'Helvetica', 144)
-	// outlet(0, 'write', month, d.getFullYear(), frameNumToTime(time))
+	outlet(0, 'moveto', 80, 280)
+	outlet(0, 'font', 'Helvetica', 200)
+	outlet(0, 'write', month, d.getFullYear(), frameNumToTime(frameNum))
 
-	outlet(2, 'color', 0., 0., 0., 1.)
-	outlet(2, 'position', -1.4, 0.65)
-	outlet(2, 'size', 200)
-	outlet(2, 'text', month + ' ' + d.getFullYear() + ' ' + frameNumToTime(time))
+	// outlet(2, 'color', 0., 0., 0., 1.)
+	// outlet(2, 'size', 200)
+	// var timePos = screenToWorld(80, 280)
+	// outlet(2, 'position', timePos[0], timePos[1])
+	// outlet(2, 'text', month + ' ' + d.getFullYear() + ' ' + frameNumToTime(frameNum))
+
+	// var numDays = daysInThisMonth()
+	// for ( var day = 0; day < numDays; day++ ) {
+	// 	post(day)
+	// 	post()
+	// 	outlet(2, 'position', day * 30, day *30)
+	// 	outlet(2, 'text', day)
+	
+	// }
+
 	outlet(1, 'erase')
 	outlet(1, 'bang')
 }
@@ -69,7 +82,7 @@ var loadImages = function () {
 	var now = new Date()
 	var year = now.getFullYear()
 	var month = now.getMonth()+1
-	const numDays = daysInMonth(month, year)
+	var numDays = daysInThisMonth()
 
 	for ( var i = 0; i < numDays; i++ ) {
 		var path = patchDir + 'images/' + month + '-' + (i+1) + '-' + year
@@ -96,7 +109,13 @@ var loadImages = function () {
 function daysInMonth (month, year) {
 	return new Date(year, month, 0).getDate();
 }
-daysInMonth.local = 1
+
+var daysInThisMonth = function() {
+	var now = new Date()
+	var year = now.getFullYear()
+	var month = now.getMonth()+1
+	return daysInMonth(month, year)
+}
 
 var frameNumToTime = function(f) {
 	var seconds = Math.floor(f * 6)
@@ -116,3 +135,13 @@ var frameNumToTime = function(f) {
 	return hours + ":" + minutes + ' ' + ampm
 }
 frameNumToTime.local = 1
+
+var scale = function (input, inMin, inMax, outMin, outMax) {
+	var percent = (input - inMin) / (inMax - inMin)
+	return percent * (outMax - outMin) + outMin
+}
+	
+var screenToWorld = function (x, y) {
+	return [scale(x, 0, 3839, -1.472761, 1.472761),
+					scale(y, 0, 2159, 0.828428, -0.828428)]
+}
