@@ -3,10 +3,12 @@ outlets = 3
 
 var imagesByDay = []
 var patchDir
-var camWidth = 640
-var camHeight = 360
 var calWidth = 3840
 var calHeight = 2160
+var cellWidth = calWidth / 7
+var cellHeight = calHeight / 6
+var cellAspect = cellWidth / calHeight
+
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var frameNum = 0
 
@@ -57,8 +59,19 @@ var drawText = function(time) {
 var drawFrames = function (frames) {
 	for ( var i = 0; i < frames.length; i++ ) {
 		var destLtrb = dayToCalPos(frames[i].day)
+		var img = new Image(frames[i].path)
+
+		var sourceAspect = img.size[1] / img.size[0]
+		// TODO: Deal with other case, where calendar cells are actually wider than the source image
+		if (sourceAspect > cellAspect) {
+			var hRatio = img.size[1] / cellHeight
+			var scaledSourceWidth = img.size[0] / hRatio
+			var sourceXOffset = (scaledSourceWidth - cellWidth) * hRatio / 2
+			var sourceWidth = img.size[0] - (sourceXOffset * 2)
+		}
+
 		outlet(0, 'readpict', 'pictname' + i, frames[i].path)
-		outlet(0, 'drawpict', 'pictname' + i, Math.floor(destLtrb[0]), destLtrb[1], Math.ceil(destLtrb[2] - destLtrb[0]), destLtrb[3] - destLtrb[1], 45.7142857143, 0, 548.5714285714)
+		outlet(0, 'drawpict', 'pictname' + i, Math.floor(destLtrb[0]), destLtrb[1], Math.ceil(destLtrb[2] - destLtrb[0]), destLtrb[3] - destLtrb[1], sourceXOffset, 0, sourceWidth, img.size[1])
 	}
 }
 
@@ -68,8 +81,6 @@ var dayToCalPos = function(dayNum) {
 	var dayOffset = d.getDay()
 	var xPos = (dayNum + dayOffset) % 7
 	var yPos = Math.floor( (dayNum + dayOffset) / 7 ) + 1
-	var cellWidth = calWidth / 7
-	var cellHeight = calHeight / 6
 	var ltrb = [xPos * cellWidth, yPos * cellHeight, (xPos+1) * cellWidth, (yPos+1) * cellHeight]
 	return ltrb
 }
@@ -93,8 +104,9 @@ var loadImages = function () {
 			if(imageNum[3]) {
 				imageNum = parseInt(imageNum[3].split('.')[0])
 			}
+			var path = f.pathname + "/" + f.filename
 			todaysImages[imageNum] = {
-				'path': f.pathname + "/" + f.filename,
+				'path': path,
 				'filename': f.filename,
 				'time': imageNum,
 				'day': i
