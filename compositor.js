@@ -9,6 +9,9 @@ var cellWidth = calWidth / 7
 var cellHeight = calHeight / 6
 var cellAspect = cellWidth / calHeight
 
+var calSketch = new Sketch(calWidth, calHeight)
+calSketch.default2d()
+
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var frameNum = 0
 
@@ -22,9 +25,20 @@ var showTime = function (t) {
 		}
 	}
 	frameNum = t
-	outlet(0, 'clear')
+
+	with (calSketch) {
+		glclearcolor(1., 1., 1., 1.)            
+		glclear();            
+		moveto(0.5,0.5);     
+		glcolor(0,1,1,1);
+		circle(0.25);
+	}
+
 	drawText()
-	drawFrames(framesFound)
+	// drawFrames(framesFound)
+	
+	var outputImage = new Image(calSketch)
+	outputImage.tonamedmatrix('ts-cal')
 	outlet(0, 'bang')
 }
 
@@ -32,10 +46,17 @@ var drawText = function(time) {
 	var d = new Date()
 	var month = monthNames[d.getMonth()]
 	
+
+	with (calSketch) {
+		moveto(screentoworld(80, 280))
+		font('Helvetica')
+		fontsize(200)
+		text(month + ' ' + d.getFullYear() + ' ' + frameNumToTime(frameNum))
+	}
 	// jit.lcd method below
-	outlet(0, 'moveto', 80, 280)
-	outlet(0, 'font', 'Helvetica', 200)
-	outlet(0, 'write', month, d.getFullYear(), frameNumToTime(frameNum))
+	// outlet(0, 'moveto', 80, 280)
+	// outlet(0, 'font', 'Helvetica', 200)
+	// outlet(0, 'write', month, d.getFullYear(), frameNumToTime(frameNum))
 
 	// outlet(2, 'color', 0., 0., 0., 1.)
 	// outlet(2, 'size', 200)
@@ -52,8 +73,8 @@ var drawText = function(time) {
 	
 	// }
 
-	outlet(1, 'erase')
-	outlet(1, 'bang')
+	// outlet(1, 'erase')
+	// outlet(1, 'bang')
 }
 
 var drawFrames = function (frames) {
@@ -94,7 +115,6 @@ var loadImages = function () {
 	var year = now.getFullYear()
 	var month = now.getMonth()+1
 	var numDays = daysInThisMonth()
-
 	for ( var i = 0; i < numDays; i++ ) {
 		var path = patchDir + 'images/' + month + '-' + (i+1) + '-' + year
 		var f = new Folder(path)
