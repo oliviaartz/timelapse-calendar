@@ -20,8 +20,8 @@ var showTime = function (t) {
 	}
 	frameNum = t
 	outlet(0, 'clear')
-	drawFrames(framesFound)
 	drawText()
+	drawFrames(framesFound)
 	outlet(0, 'bang')
 }
 
@@ -42,7 +42,7 @@ var drawText = function(time) {
 	outlet(0, 'moveto', cellWidth * 5, 240)
 	outlet(0, 'write', frameNumToTime(frameNum))
 
-	outlet(0, 'frgb', 255, 255, 255)
+	outlet(0, 'frgb', 0, 0, 0)
 	outlet(0, 'font', 'Helvetica Neue Light', 54)
 	var numDays = daysInThisMonth()
 	for ( var day = 0; day < numDays; day++ ) {
@@ -69,6 +69,12 @@ var drawFrames = function (frames) {
 
 		outlet(0, 'readpict', 'pictname' + i, frames[i].path)
 		outlet(0, 'drawpict', 'pictname' + i, Math.floor(destLtrb[0]), destLtrb[1], Math.ceil(destLtrb[2] - destLtrb[0]), destLtrb[3] - destLtrb[1], sourceXOffset, 0, sourceWidth, img.size[1])
+		outlet(0, 'frgb', 255, 255, 255)
+		var calCoords = dayToCalCoords(frames[i].day)
+		outlet(0, 'moveto', (calCoords[0] * cellWidth) + 16, (calCoords[1] * cellHeight) + 54)
+		outlet(0, 'write', frames[i].day + 1)
+
+
 	}
 }
 
