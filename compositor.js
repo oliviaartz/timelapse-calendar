@@ -1,6 +1,3 @@
-inlets = 1
-outlets = 3
-
 var imagesByDay = []
 var patchDir
 var calWidth = 3840
@@ -23,8 +20,8 @@ var showTime = function (t) {
 	}
 	frameNum = t
 	outlet(0, 'clear')
-	drawText()
 	drawFrames(framesFound)
+	drawText()
 	outlet(0, 'bang')
 }
 
@@ -33,27 +30,27 @@ var drawText = function(time) {
 	var month = monthNames[d.getMonth()]
 	
 	// jit.lcd method below
-	outlet(0, 'moveto', 80, 280)
+	outlet(0, 'frgb', 0, 0, 0)
+	outlet(0, 'moveto', 80, 240)
+	outlet(0, 'font', 'Helvetica Neue', 200)
+	outlet(0, 'textface', 'bold')
+	outlet(0, 'write', month)
+	outlet(0, 'textface', 'normal')
+	outlet(0, 'write', d.getFullYear())
 	outlet(0, 'font', 'Helvetica', 200)
-	outlet(0, 'write', month, d.getFullYear(), frameNumToTime(frameNum))
+	outlet(0, 'font', 'Helvetica Neue Ultralight', 200)
+	outlet(0, 'moveto', cellWidth * 5, 240)
+	outlet(0, 'write', frameNumToTime(frameNum))
 
-	// outlet(2, 'color', 0., 0., 0., 1.)
-	// outlet(2, 'size', 200)
-	// var timePos = screenToWorld(80, 280)
-	// outlet(2, 'position', timePos[0], timePos[1])
-	// outlet(2, 'text', month + ' ' + d.getFullYear() + ' ' + frameNumToTime(frameNum))
+	outlet(0, 'frgb', 255, 255, 255)
+	outlet(0, 'font', 'Helvetica Neue Light', 54)
+	var numDays = daysInThisMonth()
+	for ( var day = 0; day < numDays; day++ ) {
+		var calCoords = dayToCalCoords(day)
+		outlet(0, 'moveto', (calCoords[0] * cellWidth) + 16, (calCoords[1] * cellHeight) + 54)
+		outlet(0, 'write', day + 1)
+	}
 
-	// var numDays = daysInThisMonth()
-	// for ( var day = 0; day < numDays; day++ ) {
-	// 	post(day)
-	// 	post()
-	// 	outlet(2, 'position', day * 30, day *30)
-	// 	outlet(2, 'text', day)
-	
-	// }
-
-	outlet(1, 'erase')
-	outlet(1, 'bang')
 }
 
 var drawFrames = function (frames) {
@@ -76,13 +73,18 @@ var drawFrames = function (frames) {
 }
 
 var dayToCalPos = function(dayNum) {
+	var coords = dayToCalCoords(dayNum)
+	var ltrb = [coords[0] * cellWidth, coords[1] * cellHeight, (coords[0]+1) * cellWidth, (coords[1]+1) * cellHeight]
+	return ltrb
+}
+
+var dayToCalCoords = function(dayNum) {
 	var d = new Date()
 	d.setDate(1)
 	var dayOffset = d.getDay()
 	var xPos = (dayNum + dayOffset) % 7
 	var yPos = Math.floor( (dayNum + dayOffset) / 7 ) + 1
-	var ltrb = [xPos * cellWidth, yPos * cellHeight, (xPos+1) * cellWidth, (yPos+1) * cellHeight]
-	return ltrb
+	return [xPos, yPos]
 }
 
 var setDirectory = function (dir) {
