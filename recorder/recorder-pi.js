@@ -38,5 +38,4 @@ var capturePhoto = function() {
 	})
 }
 
-capturePhoto()
-// var j = schedule.scheduleJob('*/6 * * * * *', capturePhoto)
+var j = schedule.scheduleJob('*/6 * * * * *', capturePhoto)
