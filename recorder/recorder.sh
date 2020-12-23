@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const NodeWebcam = require( "node-webcam" ),
 			schedule = require('node-schedule'),
 			fs = require("fs"),
