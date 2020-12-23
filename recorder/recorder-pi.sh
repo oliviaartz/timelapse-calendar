@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const Raspistill = require('node-raspistill').Raspistill,
 			camera = new Raspistill({
 				width: 640,
