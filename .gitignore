@@ -1,6 +1,5 @@
 .DS_Store
 images/*
-exports/*
+*.mov
 */node_modules
-recorder/images/*
 .vscode
