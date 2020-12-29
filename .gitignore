@@ -3,3 +3,4 @@ images/*
 *.mov
 */node_modules
 .vscode
+export/

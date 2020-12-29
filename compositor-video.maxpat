@@ -765,13 +765,13 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 491.0, 371.227272727272748, 91.0, 22.0 ],
+					"patching_rect" : [ 491.0, 371.227272727272748, 124.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"filename" : "compositor.js",
+						"filename" : "compositor-video.js",
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "js compositor.js"
+					"text" : "js compositor-video.js"
 				}
 
 			}
@@ -1255,7 +1255,7 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "compositor.js",
+				"name" : "compositor-video.js",
 				"bootpath" : "~/Projects/timelapse-calendar",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
