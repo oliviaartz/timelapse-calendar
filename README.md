@@ -4,7 +4,7 @@ The compositor assembles the timelapse calendar video. It is currently a max pat
 
 ---
 
-For the recorder to work with a webcam it relies on `node-webcam`. As the instructions from `node-webcam` state, you will need additional software to use the webcam…
+For the recorder to work with a webcam it relies on `node-webcam`. [As the instructions from `node-webcam` state](https://github.com/chuckfairy/node-webcam), you will need additional software to use the webcam…
 
 
 ### Linux
