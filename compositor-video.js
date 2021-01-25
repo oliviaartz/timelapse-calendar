@@ -104,7 +104,7 @@ var loadImages = function () {
 	var numDays = daysInThisMonth()
 
 	for ( var i = 0; i < numDays; i++ ) {
-		var path = patchDir + 'images/' + month + '-' + (i+1) + '-' + year
+		var path = patchDir + 'images/' + month + '-' + ("0"+(i+1)).slice(-2) + '-' + year
 		var f = new Folder(path)
 		var todaysImages = []
 		while (!f.end) {
